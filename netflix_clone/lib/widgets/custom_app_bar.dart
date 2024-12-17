@@ -16,8 +16,8 @@ class CustomAppBar extends StatelessWidget {
       child: SafeArea(
         child: Row(
           children: [
-            Image.network(
-              'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
+            Image.asset(
+              'assets/Logo.png',
               width: 30.0,
               height: 30.0,
               errorBuilder: (context, error, stackTrace) {

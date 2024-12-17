@@ -33,8 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(
-              'https://assets.nflxext.com/en_us/layout/ecweb/common/logo-shadow.png',
+            Image.asset(
+              'assets/logo_comp',
               width: 150,
               height: 150,
               errorBuilder: (context, error, stackTrace) {
