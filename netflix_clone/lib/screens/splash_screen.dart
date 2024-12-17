@@ -33,23 +33,18 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/logo_comp',
-              width: 150,
-              height: 150,
-              errorBuilder: (context, error, stackTrace) {
-                return const Text(
-                  'N',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
+            Container(
+              width: 300, 
+              height: 300, 
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/logo_comp.webp'),
+                  fit: BoxFit.contain, 
+                ),
+              ),
             ),
-            const SizedBox(height: 20),
-            const SpinKitDoubleBounce(
+            const SizedBox(height: 30),
+            const SpinKitFadingCircle(
               color: Colors.red,
               size: 50.0,
             ),
