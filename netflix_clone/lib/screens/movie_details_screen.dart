@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/movie.dart';
 import '../widgets/video_player_widget.dart';
+import '../data/movies_data.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final Movie movie;
@@ -9,6 +10,14 @@ class MovieDetailsScreen extends StatelessWidget {
     super.key,
     required this.movie,
   });
+
+  List<Movie> _getSimilarMovies() {
+    // Exclure le film actuel et prendre jusqu'à 5 films
+    return moviesData
+        .where((m) => m.id != movie.id)
+        .take(5)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +32,37 @@ class MovieDetailsScreen extends StatelessWidget {
                 // Image principale
                 AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: Image.network(
-                    'https://image.tmdb.org/t/p/original${movie.backdropPath}',
+                  child: Image.asset(
+                    movie.backdropPath,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[900],
+                        child: const Center(
+                          child: Icon(
+                            Icons.error_outline,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // Dégradé pour le texte
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 // Bouton retour et icônes
@@ -63,136 +100,117 @@ class MovieDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Titre
                   Text(
                     movie.title,
                     style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Métadonnées
                   Row(
                     children: [
                       Text(
                         movie.releaseDate.substring(0, 4),
-                        style: const TextStyle(color: Colors.grey),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(2),
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           movie.maturityRating,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Text(
                         movie.duration,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      if (movie.isNetflixOriginal) ...[
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                          child: const Row(
-                            children: [
-                              Text(
-                                'SÉRIE',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                'NETFLIX',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // Boutons d'action
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: TextButton.icon(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          icon: const Icon(Icons.play_arrow, color: Colors.black),
-                          label: const Text(
-                            'Lecture',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextButton.icon(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white24,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          icon: const Icon(Icons.download, color: Colors.white),
-                          label: const Text(
-                            'Télécharger',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Description
                   Text(
                     movie.overview,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Actions supplémentaires
+                  Wrap(
+                    spacing: 8,
+                    children: movie.genres.map((genre) {
+                      return Chip(
+                        label: Text(
+                          genre,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                        backgroundColor: Colors.grey[800],
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildActionButton(Icons.add, 'Ma liste'),
-                      _buildActionButton(Icons.thumb_up_outlined, 'Évaluer'),
-                      _buildActionButton(Icons.share, 'Partager'),
+                      _buildActionButton(
+                        icon: Icons.play_arrow,
+                        label: 'Lecture',
+                        onPressed: () {
+                          // Implémenter la lecture
+                        },
+                      ),
+                      _buildActionButton(
+                        icon: Icons.download,
+                        label: 'Télécharger',
+                        onPressed: () {
+                          // Implémenter le téléchargement
+                        },
+                      ),
+                      _buildActionButton(
+                        icon: Icons.add,
+                        label: 'Ma Liste',
+                        onPressed: () {
+                          // Implémenter l'ajout à la liste
+                        },
+                      ),
+                      _buildActionButton(
+                        icon: Icons.share,
+                        label: 'Partager',
+                        onPressed: () {
+                          // Implémenter le partage
+                        },
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  // Titres similaires
+                  const SizedBox(height: 32),
                   const Text(
                     'Titres similaires',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -200,22 +218,36 @@ class MovieDetailsScreen extends StatelessWidget {
                     height: 200,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 5,
+                      itemCount: _getSimilarMovies().length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          width: 140,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            image: const DecorationImage(
-                              image: NetworkImage('https://image.tmdb.org/t/p/w500/placeholder.jpg'),
-                              fit: BoxFit.cover,
+                        final similarMovie = _getSimilarMovies()[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MovieDetailsScreen(
+                                  movie: similarMovie,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 140,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                image: AssetImage(similarMovie.posterPath),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         );
                       },
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -225,19 +257,22 @@ class MovieDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label) {
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return Column(
       children: [
-        Icon(
-          icon,
+        IconButton(
+          icon: Icon(icon),
           color: Colors.white,
-          size: 28,
+          onPressed: onPressed,
         ),
-        const SizedBox(height: 4),
         Text(
           label,
           style: const TextStyle(
-            color: Colors.grey,
+            color: Colors.white,
             fontSize: 12,
           ),
         ),
