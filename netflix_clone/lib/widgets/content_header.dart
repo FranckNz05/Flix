@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import '../models/movie.dart';
+import '../data/movies_data.dart';
 
 class ContentHeader extends StatelessWidget {
   const ContentHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Movie featuredMovie = moviesData[0]; // Rebel Moon comme film vedette
+
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
           height: 500.0,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage('https://image.tmdb.org/t/p/original/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg'),
+              image: AssetImage(featuredMovie.backdropPath),
               fit: BoxFit.cover,
             ),
           ),
@@ -31,18 +35,14 @@ class ContentHeader extends StatelessWidget {
           bottom: 110.0,
           child: SizedBox(
             width: 250.0,
-            child: Image.network(
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Wednesday_Netflix_logo.png/800px-Wednesday_Netflix_logo.png',
-              errorBuilder: (context, error, stackTrace) {
-                return const Text(
-                  'WEDNESDAY',
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                );
-              },
+            child: Text(
+              featuredMovie.title.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

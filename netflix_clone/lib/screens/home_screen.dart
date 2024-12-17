@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/content_list.dart';
 import '../widgets/content_header.dart';
+import '../data/movies_data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,14 +54,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   _buildCategoryButtons(),
                   const SizedBox(height: 20),
-                  const ContentList(
-                    title: 'Films à succès des années 2020',
-                    key: PageStorageKey('trending'),
+                  ContentList(
+                    title: 'Tendances actuelles',
+                    contentList: trendingMovies,
+                    imageType: ImageType.poster,
                   ),
                   const SizedBox(height: 20),
-                  const ContentList(
-                    title: 'Parce que vous avez regardé Black Doves',
-                    key: PageStorageKey('recommended'),
+                  ContentList(
+                    title: 'Films d\'action',
+                    contentList: actionMovies,
+                    imageType: ImageType.poster,
+                  ),
+                  const SizedBox(height: 20),
+                  ContentList(
+                    title: 'Originals Netflix',
+                    contentList: netflixOriginals,
+                    isOriginals: true,
+                    imageType: ImageType.poster,
+                  ),
+                  const SizedBox(height: 20),
+                  ContentList(
+                    title: 'Populaire sur Netflix',
+                    contentList: popularMovies,
+                    imageType: ImageType.poster,
                   ),
                   const SizedBox(height: 20),
                   _buildMobileGamesSection(),

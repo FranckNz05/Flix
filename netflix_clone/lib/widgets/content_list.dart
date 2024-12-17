@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../models/movie.dart';
 import '../screens/movie_details_screen.dart';
 
+enum ImageType { poster, backdrop }
+
 class ContentList extends StatelessWidget {
   final String title;
-  final List<Movie> movies;
+  final List<Movie> contentList;
+  final bool isOriginals;
+  final ImageType imageType;
 
   const ContentList({
-    required Key key,
+    super.key,
     required this.title,
-    this.movies = const [],
-  }) : super(key: key);
+    required this.contentList,
+    this.isOriginals = false,
+    this.imageType = ImageType.poster,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,30 +35,16 @@ class ContentList extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 220.0,
+          height: isOriginals ? 400.0 : 200.0,
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(
               vertical: 12.0,
               horizontal: 16.0,
             ),
             scrollDirection: Axis.horizontal,
-            itemCount: movies.isEmpty ? 10 : movies.length,
+            itemCount: contentList.length,
             itemBuilder: (BuildContext context, int index) {
-              final movie = movies.isEmpty
-                  ? Movie(
-                      id: index,
-                      title: 'Movie $index',
-                      overview: 'Description du film',
-                      posterPath: '/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg',
-                      backdropPath: '/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg',
-                      voteAverage: 4.5,
-                      releaseDate: '2024',
-                      duration: '1h 36m',
-                      maturityRating: '16+',
-                      isNetflixOriginal: true,
-                    )
-                  : movies[index];
-
+              final Movie movie = contentList[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -65,12 +56,14 @@ class ContentList extends StatelessWidget {
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                  width: 130.0,
+                  width: isOriginals ? 200.0 : 130.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                      image: AssetImage(
+                        imageType == ImageType.poster
+                            ? movie.posterPath
+                            : movie.backdropPath,
                       ),
                       fit: BoxFit.cover,
                     ),

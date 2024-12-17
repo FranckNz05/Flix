@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/content_list.dart';
+import '../data/movies_data.dart';
 
 class NewContentScreen extends StatelessWidget {
   const NewContentScreen({super.key});
@@ -7,35 +8,51 @@ class NewContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Tout nouveau'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.cast),
-            onPressed: () {},
+      backgroundColor: Colors.black,
+      body: CustomScrollView(
+        slivers: [
+          const SliverPadding(
+            padding: EdgeInsets.only(top: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(left: 24.0),
+                child: Text(
+                  'Nouveautés',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Nouveaux Films',
+                contentList: trendingMovies,
+              ),
+            ),
           ),
-        ],
-      ),
-      body: ListView(
-        children: const [
-          ContentList(
-            title: 'Nouveautés',
-            key: PageStorageKey('new_releases'),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Séries du Moment',
+                contentList: actionMovies,
+              ),
+            ),
           ),
-          SizedBox(height: 20),
-          ContentList(
-            title: 'Ajouts récents',
-            key: PageStorageKey('recent_adds'),
-          ),
-          SizedBox(height: 20),
-          ContentList(
-            title: 'Bientôt disponible',
-            key: PageStorageKey('coming_soon'),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top 10 en France',
+                contentList: popularMovies,
+              ),
+            ),
           ),
         ],
       ),
