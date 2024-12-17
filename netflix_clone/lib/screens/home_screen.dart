@@ -81,9 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 20),
                   _buildMobileGamesSection(),
                   const SizedBox(height: 20),
-                  const ContentList(
+                  ContentList(
                     title: 'Reprendre avec le profil de Franck_Nz',
-                    key: PageStorageKey('continue_watching'),
+                    contentList: popularMovies.take(5).toList(),
+                    imageType: ImageType.backdrop,
                   ),
                 ],
               ),
